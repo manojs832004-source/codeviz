@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Selection Sort — Step-by-Step Infographic</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f8fafc; --card-bg: #ffffff; --border: #e2e8f0;
+    --text: #1e293b; --text-secondary: #64748b; --text-muted: #94a3b8;
+    --blue-50: #eff6ff; --blue-100: #dbeafe; --blue-200: #bfdbfe;
+    --blue-400: #60a5fa; --blue-500: #3b82f6; --blue-600: #2563eb;
+    --red-50: #fef2f2; --red-100: #fee2e2; --red-400: #f87171; --red-500: #ef4444;
+    --green-50: #f0fdf4; --green-100: #dcfce7; --green-400: #4ade80; --green-500: #22c55e; --green-600: #16a34a;
+    --purple-50: #faf5ff; --purple-500: #a855f7;
+    --amber-50: #fffbeb; --amber-400: #fbbf24; --amber-500: #f59e0b;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 40px 20px; }
+  .container { max-width: 1200px; margin: 0 auto; }
+
+  /* Header */
+  .header { text-align: center; margin-bottom: 48px; }
+  .header .badge { display: inline-block; background: linear-gradient(135deg, var(--blue-500), var(--purple-500)); color: white; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; padding: 6px 16px; border-radius: 100px; margin-bottom: 16px; }
+  .header h1 { font-size: 36px; font-weight: 800; background: linear-gradient(135deg, #1e293b, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+  .header p { font-size: 16px; color: var(--text-secondary); max-width: 600px; margin: 0 auto; }
+
+  /* Code */
+  .code-section { background: #1e293b; border-radius: 16px; padding: 28px 32px; margin-bottom: 40px; position: relative; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.12); }
+  .code-section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--blue-500), var(--purple-500), var(--amber-500)); }
+  .code-section .code-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--blue-400); margin-bottom: 16px; }
+  .code-section pre { font-family: 'JetBrains Mono', monospace; font-size: 14px; line-height: 1.8; color: #e2e8f0; }
+  .kw { color: #c084fc; } .fn { color: #60a5fa; } .num { color: #fbbf24; } .cm { color: #64748b; font-style: italic; } .op { color: #f87171; }
+
+  /* Initial state */
+  .initial-state { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 28px 32px; margin-bottom: 40px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+  .initial-state h3 { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-secondary); margin-bottom: 20px; }
+  .array-display { display: flex; gap: 6px; align-items: flex-end; flex-wrap: wrap; }
+  .array-box { width: 64px; height: 64px; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 12px; font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 700; position: relative; }
+  .array-box .index { position: absolute; bottom: -22px; font-size: 10px; font-weight: 600; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
+  .box-unsorted { background: var(--blue-50); border: 2px solid var(--blue-200); color: var(--blue-600); }
+  .box-comparing { background: var(--red-50); border: 2px dashed var(--red-400); color: var(--red-500); box-shadow: 0 0 0 3px rgba(248,113,113,0.15); }
+  .box-sorted { background: var(--green-50); border: 2px solid var(--green-400); color: var(--green-600); }
+  .box-min { background: var(--amber-50); border: 2px solid var(--amber-400); color: #92400e; box-shadow: 0 0 0 3px rgba(251,191,36,0.2); }
+  .box-current { background: var(--purple-50); border: 2px solid var(--purple-500); color: #7e22ce; }
+  .legend { display: flex; gap: 24px; flex-wrap: wrap; margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--border); }
+  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 500; color: var(--text-secondary); }
+  .legend-swatch { width: 24px; height: 24px; border-radius: 6px; }
+
+  /* Steps */
+  .steps-container { display: flex; flex-direction: column; gap: 16px; }
+  .step-row { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+  .step-header { display: flex; align-items: center; gap: 12px; padding: 14px 24px; border-bottom: 1px solid var(--border); background: #f8fafc; }
+  .step-number { width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: white; background: linear-gradient(135deg, var(--blue-500), var(--blue-600)); flex-shrink: 0; }
+  .step-title { font-size: 14px; font-weight: 600; color: var(--text); }
+  .step-subtitle { font-size: 12px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
+  .step-content { display: grid; grid-template-columns: 260px 1fr 280px; min-height: 120px; }
+  .step-vars { padding: 20px; border-right: 1px solid var(--border); background: #fafbfc; }
+  .step-vars h4 { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--text-muted); margin-bottom: 12px; }
+  .var-table { width: 100%; border-collapse: collapse; }
+  .var-table td { padding: 4px 0; font-size: 13px; font-family: 'JetBrains Mono', monospace; }
+  .var-table td:first-child { color: var(--purple-500); font-weight: 600; width: 100px; }
+  .var-table td:nth-child(2) { color: var(--text-muted); width: 20px; text-align: center; }
+  .var-table td:last-child { color: var(--text); font-weight: 500; }
+  .var-changed { background: #fef3c7; border-radius: 4px; padding: 1px 6px !important; color: #92400e !important; }
+  .step-array { padding: 20px 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
+  .step-array .array-display { gap: 4px; }
+  .step-array .array-box { width: 56px; height: 56px; font-size: 18px; border-radius: 10px; }
+  .pointer-row { display: flex; gap: 4px; width: 100%; justify-content: center; }
+  .pointer-cell { width: 56px; text-align: center; font-size: 10px; font-weight: 700; font-family: 'JetBrains Mono', monospace; color: var(--text-muted); }
+  .ptr { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 9px; }
+  .ptr-i { background: #dbeafe; color: #2563eb; }
+  .ptr-j { background: #fee2e2; color: #dc2626; }
+  .ptr-min { background: #fef3c7; color: #92400e; }
+  .pointer-cell .arrow { display: block; font-size: 14px; line-height: 1; margin-bottom: 2px; }
+  .swap-indicator { display: flex; align-items: center; gap: 8px; margin-top: 4px; font-size: 11px; font-weight: 600; color: var(--red-500); }
+  .step-explanation { padding: 20px; border-left: 1px solid var(--border); display: flex; flex-direction: column; justify-content: center; gap: 8px; }
+  .step-explanation .action { font-size: 13px; font-weight: 600; color: var(--text); line-height: 1.5; }
+  .step-explanation .detail { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+  .step-explanation .comparison { font-family: 'JetBrains Mono', monospace; font-size: 12px; background: #f1f5f9; padding: 6px 10px; border-radius: 6px; color: var(--text); border-left: 3px solid var(--blue-400); }
+  .result-yes { display: inline-block; background: var(--green-50); color: var(--green-600); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 100px; border: 1px solid var(--green-400); }
+  .result-no { display: inline-block; background: var(--red-50); color: var(--red-500); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 100px; border: 1px solid var(--red-400); }
+
+  /* Conclusion */
+  .conclusion { background: linear-gradient(135deg, #f0fdf4, #dcfce7); border: 2px solid var(--green-400); border-radius: 16px; padding: 28px 32px; margin-top: 16px; display: flex; align-items: center; gap: 24px; }
+  .conclusion .checkmark { width: 48px; height: 48px; border-radius: 50%; background: var(--green-500); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .conclusion .checkmark svg { width: 24px; height: 24px; color: white; }
+  .conclusion-text h3 { font-size: 18px; font-weight: 700; color: #166534; margin-bottom: 4px; }
+  .conclusion-text p { font-size: 14px; color: #15803d; }
+  .conclusion .final-array { margin-left: auto; display: flex; gap: 4px; }
+  .conclusion .final-array .array-box { width: 52px; height: 52px; font-size: 17px; border-radius: 10px; }
+
+  .pass-label { text-align: center; margin: 40px 0 20px; position: relative; }
+  .pass-label::before { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 2px; background: linear-gradient(90deg, transparent, var(--blue-200), transparent); }
+  .pass-label span { position: relative; background: var(--bg); padding: 0 24px; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--blue-500); }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="badge">Algorithm Infographic</div>
+    <h1>Selection Sort</h1>
+    <p>A complete visual breakdown of the first pass, tracking every variable, comparison, and array transformation.</p>
+  </div>
+
+  <div class="code-section">
+    <div class="code-label">Python — Selection Sort</div>
+    <pre><span class="kw">def</span> <span class="fn">selection_sort</span>(arr):
+    n = <span class="fn">len</span>(arr)
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+        min_index = i                        <span class="cm"># Assume current position holds minimum</span>
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(i + <span class="num">1</span>, n):
+            <span class="kw">if</span> arr[j] <span class="op">&lt;</span> arr[min_index]:   <span class="cm"># Found a smaller element?</span>
+                min_index = j                <span class="cm"># Update min_index</span>
+        arr[i], arr[min_index] = arr[min_index], arr[i]  <span class="cm"># Swap</span>
+
+arr = [<span class="num">29</span>, <span class="num">10</span>, <span class="num">14</span>, <span class="num">37</span>, <span class="num">13</span>]
+<span class="fn">selection_sort</span>(arr)
+<span class="fn">print</span>(arr)   <span class="cm"># → [10, 13, 14, 29, 37]</span></pre>
+  </div>
+
+  <div class="initial-state">
+    <h3>Initial Array State</h3>
+    <div class="array-display">
+      <div class="array-box box-unsorted">29<span class="index">[0]</span></div>
+      <div class="array-box box-unsorted">10<span class="index">[1]</span></div>
+      <div class="array-box box-unsorted">14<span class="index">[2]</span></div>
+      <div class="array-box box-unsorted">37<span class="index">[3]</span></div>
+      <div class="array-box box-unsorted">13<span class="index">[4]</span></div>
+    </div>
+    <div style="margin-top:16px;font-size:13px;color:var(--text-secondary)">
+      <strong>n</strong> = 5 &nbsp;|&nbsp; Array is fully unsorted. We will trace <strong>Pass 1</strong> (i = 0) step by step.
+    </div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-swatch box-unsorted"></div>Unsorted</div>
+      <div class="legend-item"><div class="legend-swatch box-comparing"></div>Being Compared</div>
+      <div class="legend-item"><div class="legend-swatch box-min"></div>Current Minimum</div>
+      <div class="legend-item"><div class="legend-swatch box-current"></div>i (scan position)</div>
+      <div class="legend-item"><div class="legend-swatch box-sorted"></div>Sorted / Final</div>
+    </div>
+  </div>
+
+  <div class="pass-label"><span>Pass 1 — Outer Loop: i = 0</span></div>
+
+  <div class="steps-container">
+    <!-- Step 1 -->
+    <div class="step-row">
+      <div class="step-header">
+        <div class="step-number">1</div>
+        <div><div class="step-title">Initialize min_index</div><div class="step-subtitle">min_index = i → min_index = 0</div></div>
+      </div>
+      <div class="step-content">
+        <div class="step-vars"><h4>Variable State</h4><table class="var-table"><tr><td>i</td><td>=</td><td>0</td></tr><tr><td>min_index</td><td>=</td><td class="var-changed">0</td></tr><tr><td>arr[min]</td><td>=</td><td>29</td></tr><tr><td>j</td><td>=</td><td>—</td></tr><tr><td>n</td><td>=</td><td>5</td></tr></table></div>
+        <div class="step-array">
+          <div class="pointer-row"><div class="pointer-cell"><span class="arrow">↓</span><span class="ptr ptr-i">i</span><span class="ptr ptr-min" style="margin-left:2px">min</span></div><div class="pointer-cell"></div><div class="pointer-cell"></div><div class="pointer-cell"></div><div class="pointer-cell"></div></div>
+          <div class="array-display"><div class="array-box box-min">29</div><div class="array-box box-unsorted">10</div><div class="array-box box-unsorted">14</div><div class="array-box box-unsorted">37</div><div class="array-box box-unsorted">13</div></div>
+        </div>
+        <div class="step-explanation"><div class="action">Assume first element is the minimum.</div><div class="detail">We set <code>min_index = 0</code>, so the current smallest known element is <strong>arr[0] = 29</strong>. Now the inner loop will scan the rest of the array to find anything smaller.</div></div>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step-row">
+      <div class="step-header">
+        <div class="step-number">2</div>
+        <div><div class="step-title">Inner Loop — j = 1</div><div class="step-subtitle">Compare arr[1] with arr[min_index]</div></div>
+      </div>
+      <div class="step-content">
+        <div class="step-vars"><h4>Variable State</h4><table class="var-table"><tr><td>i</td><td>=</td><td>0</td></tr><tr><td>j</td><td>=</td><td class="var-changed">1</td></tr><tr><td>min_index</td><td>=</td><td class="var-changed">0 → 1</td></tr><tr><td>arr[j]</td><td>=</td><td>10</td></tr><tr><td>arr[min]</td><td>=</td><td>29</td></tr></table></div>
+        <div class="step-array">
+          <div class="pointer-row"><div class="pointer-cell"><span class="arrow">↓</span><span class="ptr ptr-i">i</span></div><div class="pointer-cell"><span class="arrow">↓</span><span class="ptr ptr-j">j</span><span class="ptr ptr-min" style="margin-left:2px">min✓</span></div><div class="pointer-cell"></div><div class="pointer-cell"></div><div class="pointer-cell"></div></div>
+          <div class="array-display"><div class="array-box box-current">29</div><div class="array-box box-comparing">10</div><div class="array-box box-unsorted">14</div><div class="array-box box-unsorted">37</div><div class="array-box box-unsorted">13</div></div>
+        </div>
+        <div class="step-explanation"><div class="comparison">10 &lt; 29 ?</div><div style="margin-top:6px"><span class="result-yes">✓ YES — Update min_index</span></div><div class="detail" style="margin-top:6px"><strong>10</strong> is smaller than <strong>29</strong>, so we update <code>min_index = 1</code>. The new smallest known element is now <strong>10</strong>.</div></div>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step-row">
+      <div class="step-header">
+        <div class="step-number">3</div>
+        <div><div class="step-title">Inner Loop — j = 2</div><div class="step-subtitle">Compare arr[2] with arr[min_index]</div></div>
+      </div>
+      <div class="step-content">
+        <div class="step-vars"><h4>Variable State</h4><table class="var-table"><tr><td>i</td><td>=</td><td>0</td></tr><tr><td>j</td><td>=</td><td class="var-changed">2</td></tr><tr><td>min_index</td><td>=</td><td>1</td></tr><tr><td>arr[j]</td><td>=</td><td>14</td></tr><tr><td>arr[min]</td><td>=</td><td>10</td></tr></table></div>
+        <div class="step-array">
+          <div class="pointer-row"><div class="pointer-cell"><span class="arrow">↓</span><span class="ptr ptr-i">i</span></div><div class="pointer-cell"><span class="arrow">↓</span><span class="ptr ptr-min">min</span></div><div class="pointer-cell"><span class="arrow">↓</span><span class="ptr ptr-j">j</span></div><div class="pointer-cell"></div><div class="pointer-cell"></div></div>
+          <div class="array-display"><div class="array-box box-current">29</div><div class="array-box box-min">10</div><div class="array-box box-comparing">14</div><div class="array-box box-unsorted">37</div><div class="array-box box-unsorted">13</div></div>
+        </div>
+        <div class="step-explanation"><div class="comparison">14 &lt; 10 ?</div><div style="margin-top:6px"><span class="result-no">✗ NO — Keep min_index</span></div><div class="detail" style="margin-top:6px"><strong>14</strong> is not smaller than <strong>10</strong>, so <code>min_index</code> stays at <strong>1</strong>. Continue scanning.</div></div>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="step-row">
+      <div class="step-header">
+        <div class="step-number">4</div>
+        <div><div class="step-title">Inner Loop — j = 3</div><div class="step-subtitle">Compare arr[3] with arr[min_index]</div></div>
+      </div>
+      <div class="step-content">
+        <div class="step-vars"><h4>Variable State</h4><table class="var-table"><tr><td>i</td><td>=</td><td>0</td></tr><tr><td>j</td><td>=</td><td class="var-changed">3</td></tr><tr><td>min_index</td><td>=</td><td>1</td></tr><tr><td>arr[j]</td><td>=</td><td>37</td></tr><tr><td>arr[min]</td><td>=</td><td>10</td></tr></table></div>
+        <div class="step-array">
+          <div class="pointer-row"><div class="pointer-cell"><span class="arrow">↓</span><span class="ptr ptr-i">i</span></div><div class="pointer-cell"><span class="arrow">↓</span><span class="ptr ptr-min">min</span></div><div class="pointer-cell"></div><div class="pointer-cell"><span class="arrow">↓</span><span class="ptr ptr-j">j</span></div><div class="pointer-cell"></div></div>
+          <div class="array-display"><div class="array-box box-current">29</div><div class="array-box box-min">10</div><div class="array-box box-unsorted">14</div><div class="array-box box-comparing">37</div><div class="array-box box-unsorted">13</div></div>
+        </div>
+        <div class="step-explanation"><div class="comparison">37 &lt; 10 ?</div><div style="margin-top:6px"><span class="result-no">✗ NO — Keep min_index</span></div><div class="detail" style="margin-top:6px"><strong>37</strong> is not smaller than <strong>10</strong>. <code>min_index</code> remains <strong>1</strong>.</div></div>
+      </div>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="step-row">
+      <div class="step-header">
+        <div class="step-number">5</div>
+        <div><div class="step-title">Inner Loop — j = 4</div><div class="step-subtitle">Compare arr[4] with arr[min_index]</div></div>
+      </div>
+      <div class="step-content">
+        <div class="step-vars"><h4>Variable State</h4><table class="var-table"><tr><td>i</td><td>=</td><td>0</td></tr><tr><td>j</td><td>=</td><td class="var-changed">4</td></tr><tr><td>min_index</td><td>=</td><td>1</td></tr><tr><td>arr[j]</td><td>=</td><td>13</td></tr><tr><td>arr[min]</td><td>=</td><td>10</td></tr></table></div>
+        <div class="step-array">
+          <div class="pointer-row"><div class="pointer-cell"><span class="arrow">↓</span><span class="ptr ptr-i">i</span></div><div class="pointer-cell"><span class="arrow">↓</span><span class="ptr ptr-min">min</span></div><div class="pointer-cell"></div><div class="pointer-cell"></div><div class="pointer-cell"><span class="arrow">↓</span><span class="ptr ptr-j">j</span></div></div>
+          <div class="array-display"><div class="array-box box-current">29</div><div class="array-box box-min">10</div><div class="array-box box-unsorted">14</div><div class="array-box box-unsorted">37</div><div class="array-box box-comparing">13</div></div>
+        </div>
+        <div class="step-explanation"><div class="comparison">13 &lt; 10 ?</div><div style="margin-top:6px"><span class="result-no">✗ NO — Keep min_index</span></div><div class="detail" style="margin-top:6px"><strong>13</strong> is not smaller than <strong>10</strong>. Inner loop ends. The minimum element found is <strong>arr[1] = 10</strong>.</div></div>
+      </div>
+    </div>
+
+    <!-- Step 6: SWAP -->
+    <div class="step-row" style="border-color: var(--amber-400);">
+      <div class="step-header" style="background: #fffbeb;">
+        <div class="step-number" style="background: linear-gradient(135deg, var(--amber-400), var(--amber-500));">⇄</div>
+        <div><div class="step-title">Swap — arr[i] ↔ arr[min_index]</div><div class="step-subtitle">arr[0], arr[1] = arr[1], arr[0]</div></div>
+      </div>
+      <div class="step-content">
+        <div class="step-vars"><h4>Variable State</h4><table class="var-table"><tr><td>i</td><td>=</td><td>0</td></tr><tr><td>min_index</td><td>=</td><td>1</td></tr><tr><td>arr[0]</td><td>=</td><td class="var-changed">29 → 10</td></tr><tr><td>arr[1]</td><td>=</td><td class="var-changed">10 → 29</td></tr></table>
+        <div style="margin-top:12px; font-size:11px; color: var(--text-muted)"><strong>Before:</strong> [29, 10, 14, 37, 13]<br><strong>After:</strong>&nbsp; [10, 29, 14, 37, 13]</div></div>
+        <div class="step-array">
+          <div class="pointer-row"><div class="pointer-cell"><span class="arrow">↓</span><span class="ptr ptr-i">i=0</span></div><div class="pointer-cell"><span class="arrow">↓</span><span class="ptr ptr-min">min=1</span></div><div class="pointer-cell"></div><div class="pointer-cell"></div><div class="pointer-cell"></div></div>
+          <div class="array-display"><div class="array-box" style="background:#fef3c7;border:2px dashed var(--amber-400);color:#92400e">29</div><div class="array-box" style="background:#fef3c7;border:2px dashed var(--amber-400);color:#92400e">10</div><div class="array-box box-unsorted">14</div><div class="array-box box-unsorted">37</div><div class="array-box box-unsorted">13</div></div>
+          <div class="swap-indicator">⇄ SWAP: 29 ↔ 10</div>
+        </div>
+        <div class="step-explanation"><div class="action">Swap the element at position i with the minimum element found.</div><div class="detail">Since <code>min_index (1) ≠ i (0)</code>, we swap <strong>arr[0]</strong> and <strong>arr[1]</strong>. The value <strong>10</strong> (the smallest in the array) moves to position <strong>0</strong>.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Conclusion -->
+  <div class="conclusion">
+    <div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><path d="M5 13l4 4L19 7"/></svg></div>
+    <div class="conclusion-text">
+      <h3>Pass 1 Complete — Element 10 has reached its correct position</h3>
+      <p>The smallest element (10) is now at index 0. The next pass (i=1) will sort the remaining [29, 14, 37, 13].</p>
+    </div>
+    <div class="final-array">
+      <div class="array-box box-sorted">10</div>
+      <div class="array-box box-unsorted">29</div>
+      <div class="array-box box-unsorted">14</div>
+      <div class="array-box box-unsorted">37</div>
+      <div class="array-box box-unsorted">13</div>
+    </div>
+  </div>
+
+  <div style="text-align:center; margin-top:48px; padding-top:24px; border-top: 1px solid var(--border);">
+    <p style="font-size:12px; color:var(--text-muted)">Generated by <strong>AlgoViz</strong> — Algorithm Visualization Platform</p>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,9 @@
+FROM python:3.11-slim
+
+# Copy the tracer code
+COPY src/docker/python_tracer.py /tracer/python_tracer.py
+
+# Create a non-root user for added security
+RUN useradd -m -s /bin/bash pythonuser
+USER pythonuser
+WORKDIR /app
